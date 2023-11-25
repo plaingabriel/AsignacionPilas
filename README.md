@@ -4,7 +4,7 @@
 
 ### Criterios
 
-‌* Evaluar una expresión infija
+* Evaluar una expresión infija
 * **Usar pilas**
 * Usar POO (Atributos, métodos, clases)
 * Hacer menú de opciones
@@ -15,6 +15,7 @@
 * Defender el proyecto
 
 > **Expresión Infija:** Expresión excesivamente parentizada. Por ejemplo: ((A + B) / (C - D)) ó ((4 + 5) / (5 - 2))
+
 > **Expresión Postfija:** LOs operadores de postfijo siguen una expresión primaria. Por ejemplo: AB+CD-/ ó 45+52-/
 
 * **Validar formato correcto:** 
