@@ -29,8 +29,11 @@
   * Agrupación (, )
   * Concatenar caracteres
   * Si hay un caracter diferente a ellos, rebotar por expresión inválida
+
     **Ejemplo:**
+
     *Entrada:*  ((A + B) / (C - D))
+
     *Salida:* AB+CD-/
   
 * **Opcion Evaluar:**
