@@ -40,8 +40,11 @@
   * Hacer las operaciones algebraicas correspondientes
   * Si hay un caracter diferente a ellos, rebotar por expresión inválida
   * Si hay un caso de division entre 0, rebotar
+
     **Ejemplo:**
+
     *Entrada:*  ((4 + 5) / (5 - 2))
+
     *Salida:* 3
 
 ### Pendiente
