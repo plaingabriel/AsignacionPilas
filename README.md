@@ -4,15 +4,15 @@
 
 ### Criterios
 
-‌- Evaluar una expresión infija
-- **Usar pilas**
-‌- Usar POO (Atributos, métodos, clases)
-- Hacer menú de opciones
-‌- Main cargado = Puntos menos
-‌- Utilizar todo los métodos de las pilas además de:
-‌  - Convertir
-‌  - Evaluar
--‌ Defender el proyecto
+‌* Evaluar una expresión infija
+* **Usar pilas**
+* Usar POO (Atributos, métodos, clases)
+* Hacer menú de opciones
+* Main cargado = Puntos menos
+* Utilizar todo los métodos de las pilas además de:
+‌  * Convertir
+‌  * Evaluar
+* Defender el proyecto
 
 > **Expresión Infija:** Expresión excesivamente parentizada. Por ejemplo: ((A + B) / (C - D)) ó ((4 + 5) / (5 - 2))
 > **Expresión Postfija:** LOs operadores de postfijo siguen una expresión primaria. Por ejemplo: AB+CD-/ ó 45+52-/
@@ -45,7 +45,8 @@
 
 ### Pendiente
 
-[] Aplicar herencia y poilimorfismo en la clase ConvertirInfija para un codigo más eficiente
-[] Desarrollar la opción de evaluar
-[] Desarrollar el menú de opciones
-[] \(**Opcional**) Matarme si todo sale mal
+- [ ] Aplicar herencia y poilimorfismo en la clase ConvertirInfija para un codigo más eficiente
+- [ ] Desarrollar la opción de evaluar
+- [ ] Desarrollar el menú de opciones
+- [ ] Defender el proyecto
+- [ ] \(**Opcional**) Matarme si todo sale mal
