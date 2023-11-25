@@ -28,8 +28,8 @@ namespace AsignacionPilas
             }
             */
 
-            String str = "(((A+B)/(C-D)+(E*F)))".Replace(" ", "");
-            Convertir c = new Convertir(str.ToCharArray());
+            String str = "((A+B)/(C-D))".Replace(" ", "");
+            Convertir c = new(str.ToCharArray());
             c.Iniciar();
         }
     }

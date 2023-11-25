@@ -62,13 +62,13 @@
         #region METODOS ABSTRACTOS
 
         // LOGICA DE SEGUN SEA CONVERTIR - EVALUAR
-        public abstract void Logica(string expresion, string operador, char[] operando1, char[] operando2);
+        public abstract string? Logica(string operador, char[] operando1, char[] operando2);
 
         // INGRESAR 3 ELEMENTOS DE LA PILA
-        public abstract int IngresarElementos(int i);
+        public abstract int IngresarElementos(int i, char l); // Acceder y devolver i
 
         // INICIAR CONVERSION - EVALUACION SEGUN EL CASO
-        public abstract void Iniciar();
+        public abstract void Iniciar(); // El "MAIN" para iniciar las operaciones dentro de las clases derivadas
 
         #endregion
 
@@ -106,7 +106,7 @@
 
             if (!ValidarEntrada())
             {
-                Console.WriteLine("La operacion ingresada contiene caracteres invalidos");
+                Console.WriteLine("ERROR. Expresion invalida");
                 Console.ReadKey();
                 return;
             }
@@ -115,7 +115,6 @@
 
             #region DECLARACION DE VARIABLES
 
-            string expresion = "";
             string operador; // Se declaran en diferentes lineas debido a que esta variable puede ser nula mientras que expresion no
             char[] operando1, operando2;
             int i = 0;
@@ -141,9 +140,16 @@
                 // Sin embargo, si el elemento que encuntra resulta ser un parentesis que cierra, se ignora y se continua con la interacion
                 if (!c && l != ')')
                 {
-                    p.PUSH(l.ToString());
+                    SetPUSH(l.ToString());
                     continue;
                 }
+
+                if (c && i == 0 && l == ')')
+                {
+                    MostrarErrorFormato();
+                    return;
+                }
+
 
                 #endregion
 
@@ -165,10 +171,18 @@
                     #endregion
 
                     // No hace falta limpiar las variables debido a que con la funcion, solo se pasa una copia de ellas, mas no se modifica su referencia
-                    Logica(expresion, operador, operando1, operando2);
+                    string? expresion = Logica(operador, operando1, operando2);
+
+                    if (expresion == null)
+                        return;
+
+                    SetPUSH(expresion);
 
                     // Parentesis que cierra significa continuar = falso
                     c = false;
+
+                    // Reiniciar
+                    i = 0;
 
                     // Terminar iteracion
                     continue;
@@ -180,18 +194,7 @@
                 #region INGRESAR 3 DATOS A LA PILA DE TIPO OPERANDO/OPERADORES DESPUES DE UN PARENTESIS QUE ABRE
 
                 if (c)
-                {
-                    i++;
-
-                    if (i % 3 == 1)
-                        p.PUSH(l.ToString()); // Operando 1
-
-                    if (i % 3 == 2)
-                        p.PUSH(l.ToString()); // Operador
-
-                    if (i % 3 == 0)
-                        p.PUSH(l.ToString()); // Operando 2
-                }
+                    i = IngresarElementos(i, l);
 
                 #endregion
             }
@@ -255,17 +258,33 @@
         // Comparar un caracter con todos los posibles caracteres validos que puede tener una expresion infija
         private bool CompararTodos()
         {
+            bool val = false;
+
+            // Val recorrerá todo el arreglo de caracteres para descubrir si hay un caracter inválido
             foreach (var l in entrada)
             {
                 if (Comparar(l, operandos))
-                    return true;
+                {
+                    val = true;
+                    continue;
+                }
                 if (Comparar(l, operadores))
-                    return true;
+                {
+                    val = true;
+                    continue;
+                }
                 if (Comparar(l, agrupacion))
-                    return true;
+                {
+                    val = true;
+                    continue;
+                }
+
+                // Detener el ciclo si encuentra un caracter invalido
+                val = false;
+                break;
             }
 
-            return false;
+            return val;
         }
 
         // CONTAR PARENTESIS

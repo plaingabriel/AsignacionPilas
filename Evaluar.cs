@@ -1,10 +1,10 @@
 ﻿namespace AsignacionPilas
 {
-    class Convertir : ConvertirInfijaPostfija
+    class Evaluar : ConvertirInfijaPostfija
     {
         char[] op = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".ToCharArray();
 
-        public Convertir(char[] e) : base(e)
+        public Evaluar(char[] e) : base(e)
         {
         }
 
@@ -14,10 +14,9 @@
             Opcion();
         }
 
-        public override string? Logica(string operador, char[] operando1, char[] operando2)
+        public override string Logica(string operador, char[] operando1, char[] operando2)
         {
-            string expresion = "";
-
+            string? expresion = "";
             // TRANSFORMAR ARREGLOS DE CARACTERES EN STRINGS
 
             expresion += new string(operando1);
@@ -30,10 +29,6 @@
 
         public override int IngresarElementos(int i, char l)
         {
-            i++;
-
-            SetPUSH(l.ToString());
-
             return i;
         }
     }

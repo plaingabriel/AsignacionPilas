@@ -46,7 +46,7 @@
 
 ### Pendiente
 
-- [ ] Aplicar herencia y poilimorfismo en la clase ConvertirInfija para un codigo más eficiente
+- [X] Aplicar herencia y poilimorfismo en la clase ConvertirInfijaPostfija para un codigo más eficiente
 - [ ] Desarrollar la opción de evaluar
 - [ ] Desarrollar el menú de opciones
 - [ ] Defender el proyecto
