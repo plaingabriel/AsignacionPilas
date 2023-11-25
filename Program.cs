@@ -29,8 +29,8 @@ namespace AsignacionPilas
             */
 
             String str = "(((A+B)/(C-D)+(E*F)))".Replace(" ", "");
-            ConvertirInfija ci = new(str.ToCharArray());
-            ci.Convertir();
+            Convertir c = new Convertir(str.ToCharArray());
+            c.Iniciar();
         }
     }
 

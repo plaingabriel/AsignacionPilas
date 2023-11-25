@@ -1,23 +1,40 @@
 ﻿namespace AsignacionPilas
 {
-    public class ConvertirInfija
+    public abstract class ConvertirInfijaPostfija
     {
         #region ATRIBUTOS
-        readonly char[] operandosABC = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".ToCharArray();
-        readonly char[] operandosNum = "0123456789".ToCharArray();
-        readonly char[] operadores = "+-*/^%".ToCharArray();
-        readonly char[] agrupacion = "()".ToCharArray();
 
-        Pila p;
-        char[] entrada;
+        private char[] operadores = "+-*/^%".ToCharArray();
+        private char[] agrupacion = "()".ToCharArray();
+
+        private char[]? operandos;
+
+
+        private Pila p;
+        private char[] entrada;
+
         #endregion
 
         #region CONSTRUCTOR
-        public ConvertirInfija(char[] e)
+        public ConvertirInfijaPostfija(char[] e)
         {
             p = new Pila(e.Length);
             entrada = e;
         }
+        #endregion
+
+        #region SETTERS
+
+        public void SetOperandos(char[] op)
+        {
+            operandos = op;
+        }
+
+        public void SetPUSH(string expresion)
+        {
+            p.PUSH(expresion);
+        }
+
         #endregion
 
         #region METODOS ESTATICOS
@@ -42,40 +59,38 @@
         }
         #endregion
 
-        #region OPCIONES
+        #region METODOS ABSTRACTOS
 
-        // CONVERTIR
-        public void Convertir()
-        {
-            Opcion(operandosABC);
-        }
+        // LOGICA DE SEGUN SEA CONVERTIR - EVALUAR
+        public abstract void Logica(string expresion, string operador, char[] operando1, char[] operando2);
 
-        // EVALUAR
-        public void Evaluar()
-        {
-            Opcion(operandosNum);
-        }
+        // INGRESAR 3 ELEMENTOS DE LA PILA
+        public abstract int IngresarElementos(int i);
+
+        // INICIAR CONVERSION - EVALUACION SEGUN EL CASO
+        public abstract void Iniciar();
+
         #endregion
 
-        #region METODOS COMPLEMENTARIOS DE "OPCIONES"
+        #region METODOS DE "INICIAR"
 
         // VERIFICAR ARREGLOS DE CARACTERES
-        private bool CompararArreglos(char[] s, int len, char[] op) // op puede ser tanto operandoNum como operandosABC
+        private bool CompararArreglos(char[] s, int len) // op puede ser tanto operandoNum como operandos
         {
             foreach (char item in s)
             {
                 if (len > 1)
                 {
                     // Si el arreglo de caracteres tiene una longitud mayor a 1, entonces deberia estar en forma de expresion infija
-                    // Por ende, se debe verificar que tenga tanto operadores como operandosABC
-                    if (!Comparar(item, op) && !Comparar(item, operadores))
+                    // Por ende, se debe verificar que tenga tanto operadores como operandos
+                    if (!Comparar(item, operandos) && !Comparar(item, operadores))
                         return false;
 
                     return true;
                 }
 
                 // Caso contrario, comparar como un caracter normal
-                if (!Comparar(item, operandosABC))
+                if (!Comparar(item, operandos))
                     return false;
             }
 
@@ -83,7 +98,7 @@
         }
 
         // METODO PARA EXPRESIONES INFIJAS DEPENDIENDO DE SI ES EVALUAR O CONVERTIR
-        private void Opcion(char[] op)
+        public void Opcion()
         {
             // Return; = abortar
 
@@ -100,9 +115,9 @@
 
             #region DECLARACION DE VARIABLES
 
-            String expresion = "";
-            String? operador; // Se declaran en diferentes lineas debido a que esta variable puede ser nula mientras que expresion no
-            char[]? operando1, operando2;
+            string expresion = "";
+            string operador; // Se declaran en diferentes lineas debido a que esta variable puede ser nula mientras que expresion no
+            char[] operando1, operando2;
             int i = 0;
             bool c = false; // Variable continuar. Se utiliza para saber si se debe continuar despues de un parentesis que abre
 
@@ -132,7 +147,7 @@
 
                 #endregion
 
-                #region LOGICA DE CONVERSION
+                #region LOGICA DE CONVERTIR - EVALUAR SEGUN SEA EL CASO
 
                 // Si hay un parentesis que cierra, hacer la conversion
                 if (l == ')')
@@ -144,52 +159,23 @@
                     operador = p.POPTOPE();
                     operando1 = p.POPTOPE().ToCharArray();
 
-                    // Verificar que las variables operando1 y operando2 sean operandosABC
-
-                    if (!CompararArreglos(operando1, operando1.Length, op) || !CompararArreglos(operando2, operando2.Length, op))
-                    {
-                        MostrarErrorFormato();
+                    if (!ValidarFormato(operando1, operando2, operador))
                         return;
-                    }
-
-                    // Verificar que operador sea un operador
-                    foreach (var item in operador)
-                        if (!Comparar(item, operadores))
-                        {
-                            MostrarErrorFormato();
-                            return;
-                        }
 
                     #endregion
 
-                    #region NOTA: ZONA A CAMBIAR
+                    // No hace falta limpiar las variables debido a que con la funcion, solo se pasa una copia de ellas, mas no se modifica su referencia
+                    Logica(expresion, operador, operando1, operando2);
 
-                    // Transformar los arreglos de caracteres en strings
-                    expresion += new string(operando1);
-                    expresion += new string(operando2);
-                    expresion += new string(operador);
-
-                    p.PUSH(expresion);
-
-                    #endregion
-
-                    #region LIMPIAR VARIABLES PARA PODER SER REUTILIZADAS
-
-                    operando2 = null;
-                    operador = null;
-                    operando1 = null;
-
-                    expresion = "";
-
+                    // Parentesis que cierra significa continuar = falso
                     c = false;
-
-                    #endregion
 
                     // Terminar iteracion
                     continue;
                 }
 
                 #endregion
+
 
                 #region INGRESAR 3 DATOS A LA PILA DE TIPO OPERANDO/OPERADORES DESPUES DE UN PARENTESIS QUE ABRE
 
@@ -221,6 +207,29 @@
             Console.WriteLine("Expresion Infija: ");
             p.Mostrar();
         }
+
+        // VALIDAR FORMATO
+        private bool ValidarFormato(char[] operando1, char[] operando2, string operador)
+        {
+            // Verificar que las variables operando1 y operando2 sean operandos
+
+            if (!CompararArreglos(operando1, operando1.Length) || !CompararArreglos(operando2, operando2.Length))
+            {
+                MostrarErrorFormato();
+                return false;
+            }
+
+            // Verificar que operador sea un operador
+            foreach (char item in operador)
+                if (!Comparar(item, operadores))
+                {
+                    MostrarErrorFormato();
+                    return false;
+                }
+
+            return true;
+        }
+
         #endregion
 
         #region METODOS PARA VALIDAR ENTRADA
@@ -248,7 +257,7 @@
         {
             foreach (var l in entrada)
             {
-                if (Comparar(l, operandosABC))
+                if (Comparar(l, operandos))
                     return true;
                 if (Comparar(l, operadores))
                     return true;
@@ -281,20 +290,20 @@
         // Verificar que la cantidad de operadores sea la cantidad de operandos + 1
         private bool CompararOp()
         {
-            int cantoperandosABC = 0, cantOperadores = 0;
+            int cantoperandos = 0, cantOperadores = 0;
 
             foreach (var l in entrada)
             {
-                foreach (var item in operandosABC)
+                foreach (var item in operandos)
                     if (l == item)
-                        cantoperandosABC++;
+                        cantoperandos++;
 
                 foreach (var item in operadores)
                     if (l == item)
                         cantOperadores++;
             }
 
-            return cantoperandosABC == cantOperadores + 1;
+            return cantoperandos == cantOperadores + 1;
         }
 
         #endregion
