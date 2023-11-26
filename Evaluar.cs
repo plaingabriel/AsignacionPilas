@@ -2,7 +2,7 @@
 {
     class Evaluar : ConvertirInfijaPostfija
     {
-        char[] op = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".ToCharArray();
+        char[] op = "0123456789".ToCharArray();
 
         public Evaluar(char[] e) : base(e)
         {
@@ -14,22 +14,53 @@
             Opcion();
         }
 
-        public override string Logica(string operador, char[] operando1, char[] operando2)
+        public override string? Logica(string operador, char[] operando1, char[] operando2)
         {
-            string? expresion = "";
+            int expresion = 0;
+
+            switch (operador)
+            {
+                case "+":
+
+                    expresion = Int32.Parse(operando1) + Int32.Parse(operando2);
+                    break;
+
+                case "-":
+
+                    expresion = Int32.Parse(operando1) - Int32.Parse(operando2);
+                    break;
+
+                case "*":
+
+                    expresion = Int32.Parse(operando1) * Int32.Parse(operando2);
+                    break;
+
+                case "/":
+
+                    if (Int32.Parse(operando2) == 0)
+                        return null;
+
+                    expresion = Int32.Parse(operando1) / Int32.Parse(operando2);
+                    break;
+
+                case "^":
+
+                    // Realizar operacion de potenciacion
+                    expresion = (int)Math.Pow(Double.Parse(operando1), Double.Parse(operando2));
+                    break;
+
+                case "%":
+
+                    if (Int32.Parse(operando2) == 0)
+                        return null;
+
+                    expresion = Int32.Parse(operando1) % Int32.Parse(operando2);
+                    break;
+            }
             // TRANSFORMAR ARREGLOS DE CARACTERES EN STRINGS
 
-            expresion += new string(operando1);
-            expresion += new string(operando2);
-            expresion += new string(operador);
+            return expresion.ToString();
 
-            return expresion;
-
-        }
-
-        public override int IngresarElementos(int i, char l)
-        {
-            return i;
         }
     }
 

@@ -27,15 +27,6 @@
             return expresion;
 
         }
-
-        public override int IngresarElementos(int i, char l)
-        {
-            i++;
-
-            SetPUSH(l.ToString());
-
-            return i;
-        }
     }
 
 }

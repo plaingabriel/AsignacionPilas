@@ -13,6 +13,8 @@
         private Pila p;
         private char[] entrada;
 
+        Boolean b = true; // Se utiliza para devolver al main si se debe reiniciar la operacion o no
+
         #endregion
 
         #region CONSTRUCTOR
@@ -37,7 +39,16 @@
 
         #endregion
 
-        #region METODOS ESTATICOS
+        #region GET
+
+        public Boolean GetBool()
+        {
+            return b;
+        }
+
+        #endregion
+
+        #region METODO ESTATICO
         private static bool Comparar(char l, char[] s)
         {
             foreach (var item in s)
@@ -49,23 +60,13 @@
             }
             return false;
         }
-        private static void MostrarErrorFormato()
-        {
 
-            Console.WriteLine("La operacion ingresada no esta en formato correcto");
-            Console.ReadKey();
-            return;
-
-        }
         #endregion
 
         #region METODOS ABSTRACTOS
 
         // LOGICA DE SEGUN SEA CONVERTIR - EVALUAR
         public abstract string? Logica(string operador, char[] operando1, char[] operando2);
-
-        // INGRESAR 3 ELEMENTOS DE LA PILA
-        public abstract int IngresarElementos(int i, char l); // Acceder y devolver i
 
         // INICIAR CONVERSION - EVALUACION SEGUN EL CASO
         public abstract void Iniciar(); // El "MAIN" para iniciar las operaciones dentro de las clases derivadas
@@ -106,8 +107,7 @@
 
             if (!ValidarEntrada())
             {
-                Console.WriteLine("ERROR. Expresion invalida");
-                Console.ReadKey();
+                MostrarExpresionInvalida();
                 return;
             }
 
@@ -165,8 +165,19 @@
                     operador = p.POPTOPE();
                     operando1 = p.POPTOPE().ToCharArray();
 
-                    if (!ValidarFormato(operando1, operando2, operador))
+                    // Casos donde el tope puede ser menor a -1 y, por ende, se devolvio un arreglo de caracteres vacio
+                    // Dicho caso se puede dar por un exceso de parentizado que no corresponde con la cantidad de operaciones a realizar
+                    if (string.IsNullOrEmpty(new string(operando1)) || string.IsNullOrEmpty(new string(operando1)) || string.IsNullOrEmpty(operador))
+                    {
+                        MostrarErrorFormato();
                         return;
+                    }
+
+                    if (!ValidarFormato(operando1, operando2, operador))
+                    {
+                        MostrarErrorFormato();
+                        return;
+                    }
 
                     #endregion
 
@@ -174,7 +185,11 @@
                     string? expresion = Logica(operador, operando1, operando2);
 
                     if (expresion == null)
+                    {
+                        b = false;
+                        Console.WriteLine("Error de división entre 0");
                         return;
+                    }
 
                     SetPUSH(expresion);
 
@@ -194,7 +209,11 @@
                 #region INGRESAR 3 DATOS A LA PILA DE TIPO OPERANDO/OPERADORES DESPUES DE UN PARENTESIS QUE ABRE
 
                 if (c)
-                    i = IngresarElementos(i, l);
+                {
+                    i++;
+
+                    SetPUSH(l.ToString());
+                }
 
                 #endregion
             }
@@ -217,18 +236,14 @@
             // Verificar que las variables operando1 y operando2 sean operandos
 
             if (!CompararArreglos(operando1, operando1.Length) || !CompararArreglos(operando2, operando2.Length))
-            {
-                MostrarErrorFormato();
                 return false;
-            }
+
 
             // Verificar que operador sea un operador
             foreach (char item in operador)
                 if (!Comparar(item, operadores))
-                {
-                    MostrarErrorFormato();
                     return false;
-                }
+
 
             return true;
         }
@@ -239,9 +254,8 @@
 
         // VALIDAR ENTRADA
         // Agrupar todas las funciones diseñadas para validar que una expresion tiene caracteres validos para ser una expresion infija
-        private bool ValidarEntrada()
+        public bool ValidarEntrada()
         {
-
             if (!CompararTodos())
                 return false;
 
@@ -323,6 +337,24 @@
             }
 
             return cantoperandos == cantOperadores + 1;
+        }
+
+        #endregion
+
+        #region MENSAJES DE ERROR
+
+        private void MostrarErrorFormato()
+        {
+            b = false;
+            Console.WriteLine("La operacion ingresada no esta en formato correcto");
+            Console.ReadKey();
+        }
+
+        private void MostrarExpresionInvalida()
+        {
+            b = false;
+            Console.WriteLine("ERROR. Expresion Invalida");
+            Console.ReadKey();
         }
 
         #endregion

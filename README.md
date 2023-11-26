@@ -47,7 +47,7 @@
 ### Pendiente
 
 - [X] Aplicar herencia y poilimorfismo en la clase ConvertirInfijaPostfija para un codigo más eficiente
-- [ ] Desarrollar la opción de evaluar
-- [ ] Desarrollar el menú de opciones
+- [X] Desarrollar la opción de evaluar
+- [X] Desarrollar el menú de opciones
 - [ ] Defender el proyecto
 - [ ] \(**Opcional**) Matarme si todo sale mal

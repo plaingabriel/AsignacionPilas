@@ -30,6 +30,10 @@
         // SACAR ELEMENTO AL FINAL DE LA PILA
         public String POPTOPE()
         {
+            // Evitar que el metodo POPTOPE se salga de los limites
+            if (tope - 1 == -2)
+                return string.Empty;
+
             return (string)Elements[tope--];
         }
 
