@@ -34,7 +34,8 @@
             }
             while (!b);
         }
-        public static void Main()
+
+        public static void Ejecutar()
         {
             int opc;
 
@@ -76,6 +77,11 @@
                 }
 
             } while (opc != 3);
+        }
+
+        public static void Main()
+        {
+            Ejecutar();
         }
 
     }
