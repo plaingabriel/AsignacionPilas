@@ -188,6 +188,7 @@
                     {
                         b = false;
                         Console.WriteLine("Error de división entre 0");
+                        Console.ReadKey();
                         return;
                     }
 
